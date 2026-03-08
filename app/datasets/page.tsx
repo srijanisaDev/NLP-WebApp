@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 const datasets = [
   {
     name: "IMDB Dataset",
-    file: "IMDB Dataset.xlsx",
-    downloadPath: "/datasets/IMDB Dataset.xlsx",
+    file: "IMDB_Dataset.xlsx",
+    downloadPath: "/api/download?file=IMDB_Dataset.xlsx",
     description:
       "64,661 KB dataset of movie reviews labeled for sentiment analysis. Used in Feature Extraction and Text Classification modules.",
     usedIn: ["Feature Extraction", "Text Classification"],
@@ -23,7 +23,7 @@ const datasets = [
   {
     name: "Friends Transcript",
     file: "Friends_Transcript.txt",
-    downloadPath: "/datasets/Friends_Transcript.txt",
+    downloadPath: "/api/download?file=Friends_Transcript.txt",
     description:
       "Raw episode transcripts from the TV show Friends (~4.7 MB). Used to train Word2Vec embeddings on conversational, informal English.",
     usedIn: ["Word Vectorization (Word2Vec)"],
@@ -38,40 +38,40 @@ const datasets = [
   },
   {
     name: "Game of Thrones Scripts",
-    file: "data_GOT/",
-    downloadPath: null,
+    file: "data_GOT.zip",
+    downloadPath: "/api/download?file=data_GOT.zip",
     description:
-      "Character dialogue and scene descriptions from Game of Thrones. Used for NLP experimentation on fantasy/formal prose.",
+      "Character dialogue and scene descriptions from Game of Thrones. Used for NLP experimentation on fantasy/formal prose. Download as ZIP.",
     usedIn: ["Word Vectorization (Word2Vec)"],
     size: "Variable",
-    format: "CSV / TXT",
+    format: "ZIP",
     rows: "Multiple episodes",
     columns: "Character, Dialogue, Season, Episode",
     source: "Custom collected",
     sourceUrl: null,
     isFolder: true,
-    available: false,
+    available: true,
   },
   {
     name: "Quora Analysis",
-    file: "quora_analysis/",
-    downloadPath: null,
+    file: "quora_analysis.zip",
+    downloadPath: "/api/download?file=quora_analysis.zip",
     description:
-      "Quora question dataset used for text analysis and NLP experiments including duplicate question detection and classification.",
+      "Quora question dataset used for text analysis and NLP experiments including duplicate question detection and classification. Download as ZIP.",
     usedIn: ["Feature Extraction", "Text Classification"],
     size: "Variable",
-    format: "CSV / TXT",
+    format: "ZIP",
     rows: "Variable",
     columns: "Question text, labels",
     source: "Custom collected",
     sourceUrl: null,
     isFolder: true,
-    available: false,
+    available: true,
   },
   {
     name: "Slang Reference List",
     file: "slang.txt",
-    downloadPath: "/datasets/slang.txt",
+    downloadPath: "/api/download?file=slang.txt",
     description:
       "Custom slang normalization dictionary used in the Text Preprocessing module to map informal terms to their standard equivalents.",
     usedIn: ["Text Preprocessing"],
@@ -89,6 +89,7 @@ const datasets = [
 const formatColors: Record<string, string> = {
   XLSX: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20",
   TXT: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+  ZIP: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20",
   "CSV / TXT":
     "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
 };
@@ -184,22 +185,14 @@ export default function DatasetsPage() {
                     </Link>
                   </Button>
                 )}
-                {d.available && d.downloadPath ? (
-                  <Button size="sm">
-                    <Link
-                      href={d.downloadPath}
-                      download
-                      className="flex items-center"
-                    >
-                      <Download className="w-3 h-3 mr-2" />
-                      Download
-                    </Link>
-                  </Button>
-                ) : (
-                  <Button size="sm" disabled variant="secondary">
-                    <FolderOpen className="w-3 h-3 mr-2" />
-                    Folder Dataset
-                  </Button>
+                {d.available && d.downloadPath && (
+                  <a
+                    href={d.downloadPath}
+                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-3 py-1.5 rounded-md text-sm font-medium transition-colors"
+                  >
+                    <Download className="w-3 h-3" />
+                    Download
+                  </a>
                 )}
               </div>
             </div>
@@ -213,16 +206,9 @@ export default function DatasetsPage() {
           📦 Note on Large Datasets
         </p>
         <p className="text-sm text-muted-foreground">
-          The IMDB dataset is ~64MB. If the download is slow, you can also
-          access it from the{" "}
-          <Link
-            href="https://ai.stanford.edu/~amaas/data/sentiment/"
-            target="_blank"
-            className="text-primary hover:underline"
-          >
-            Stanford AI Lab
-          </Link>{" "}
-          or directly from the{" "}
+          The IMDB dataset is ~64MB — download may take a moment. Folder-based
+          datasets (GOT, Quora) are packaged as ZIP files. You can also access
+          everything from the{" "}
           <Link
             href="https://github.com/srijanisaDev/NLP-from-scratch"
             target="_blank"
@@ -230,7 +216,7 @@ export default function DatasetsPage() {
           >
             original GitHub repo
           </Link>
-          . Folder-based datasets (GOT, Quora) are available in the GitHub repo.
+          .
         </p>
       </div>
     </div>
